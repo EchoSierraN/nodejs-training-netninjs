@@ -24,62 +24,63 @@ app.use(express.static("public"));
 app.use(morgan("dev"));
 
 //mongoose and mongo sandbox routes
-app.get("/add-blog", (req, res) => {
-  const blog = new Blog({
-    title: "New blog 2",
-    snippet: "More about the new blog",
-    body: "Even more about the new blog",
-  });
+// app.get("/add-blog", (req, res) => {
+//   const blog = new Blog({
+//     title: "New blog 2",
+//     snippet: "More about the new blog",
+//     body: "Even more about the new blog",
+//   });
 
-  blog.save().then((result) => {
-    res.send(result);
-  });
-});
+//   blog.save().then((result) => {
+//     res.send(result);
+//   });
+// });
 
-app.get("/all-blogs", (req, res) => {
-  Blog.find()
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.get("/all-blogs", (req, res) => {
+//   Blog.find()
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
-app.get("/single-blog", (req, res) => {
-  Blog.findById("66226383b686871f20d4fbe5")
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.get("/single-blog", (req, res) => {
+//   Blog.findById("66226383b686871f20d4fbe5")
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
-app.use((req, res, next) => {
-  console.log("========== NEW REQUEST ==============");
-  console.log("Request hostname: " + req.hostname);
-  console.log("Request path: " + req.path);
-  console.log("Request method: " + req.method);
-  next();
-});
-
+//routes
 app.get("/", (req, res) => {
   // res.sendFile("./views/index.html", { root: __dirname });
-  const blogs = [
-    { title: "Yoshi finds eggs", snippet: "Lorum ipsum something something" },
-    { title: "Mario finds stars", snippet: "Lorum ipsum something something" },
-    {
-      title: "How to defeat bowser",
-      snippet: "Lorum ipsum something something",
-    },
-  ];
-  res.render("index", { title: "Home", blogs });
+  // const blogs = [
+  //   { title: "Yoshi finds eggs", snippet: "Lorum ipsum something something" },
+  //   { title: "Mario finds stars", snippet: "Lorum ipsum something something" },
+  //   {
+  //     title: "How to defeat bowser",
+  //     snippet: "Lorum ipsum something something",
+  //   },
+  // ];
+  // res.render("index", { title: "Home", blogs });
+  res.redirect("/blogs");
 });
 
 app.get("/about", (req, res) => {
   // res.sendFile("./views/about.html", { root: __dirname });
   res.render("about", { title: "About" });
+});
+
+//blog routes
+app.get("/blogs", (req, res) => {
+  Blog.find().then((result) => {
+    res.render("index", { title: "All Blogs", blogs: result });
+  });
 });
 
 app.get("/blogs/create", (req, res) => {
