@@ -78,9 +78,11 @@ app.get("/about", (req, res) => {
 
 //blog routes
 app.get("/blogs", (req, res) => {
-  Blog.find().then((result) => {
-    res.render("index", { title: "All Blogs", blogs: result });
-  });
+  Blog.find()
+    .sort({ createdAt: -1 })
+    .then((result) => {
+      res.render("index", { title: "All Blogs", blogs: result });
+    });
 });
 
 app.get("/blogs/create", (req, res) => {
