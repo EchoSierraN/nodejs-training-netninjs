@@ -22,6 +22,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(morgan("dev"));
 
+//mongoose and mongo sandbox routes
+
 app.use((req, res, next) => {
   console.log("========== NEW REQUEST ==============");
   console.log("Request hostname: " + req.hostname);
