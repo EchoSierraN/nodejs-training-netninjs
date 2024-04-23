@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const Blog = require("./models/blog");
 
 const app = express();
+
 //connect to mongodb
 const dbURI =
   "mongodb+srv://echosierran:0ZCzGlq1Na1136Wt@cluster0.nmgsweq.mongodb.net/dbBlogs?retryWrites=true&w=majority&appName=Cluster0";
@@ -17,62 +18,17 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
 app.set("view engine", "ejs");
-
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-
-//mongoose and mongo sandbox routes
-// app.get("/add-blog", (req, res) => {
-//   const blog = new Blog({
-//     title: "New blog 2",
-//     snippet: "More about the new blog",
-//     body: "Even more about the new blog",
-//   });
-
-//   blog.save().then((result) => {
-//     res.send(result);
-//   });
-// });
-
-// app.get("/all-blogs", (req, res) => {
-//   Blog.find()
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
-
-// app.get("/single-blog", (req, res) => {
-//   Blog.findById("66226383b686871f20d4fbe5")
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
 
 //routes
 app.get("/", (req, res) => {
-  // res.sendFile("./views/index.html", { root: __dirname });
-  // const blogs = [
-  //   { title: "Yoshi finds eggs", snippet: "Lorum ipsum something something" },
-  //   { title: "Mario finds stars", snippet: "Lorum ipsum something something" },
-  //   {
-  //     title: "How to defeat bowser",
-  //     snippet: "Lorum ipsum something something",
-  //   },
-  // ];
-  // res.render("index", { title: "Home", blogs });
   res.redirect("/blogs");
 });
 
 app.get("/about", (req, res) => {
-  // res.sendFile("./views/about.html", { root: __dirname });
   res.render("about", { title: "About" });
 });
 
@@ -85,12 +41,27 @@ app.get("/blogs", (req, res) => {
     });
 });
 
+app.post("/blogs", (req, res) => {
+  const blog = new Blog(req.body);
+  console.log(req.body);
+
+  blog.save().then((result) => {
+    res.redirect("/blogs");
+  });
+});
+
+app.get("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id).then((result) => {
+    render("details", { blog: result, title: "Blog details" });
+  });
+});
+
 app.get("/blogs/create", (req, res) => {
   res.render("create", { title: "Create" });
 });
 
 //404
 app.use((req, res) => {
-  // res.sendFile("./views/404.html", { root: __dirname });
-  res.status(404).render("404");
+  res.status(404).render("404", { title: "Page Not Found" });
 });
