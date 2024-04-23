@@ -1,5 +1,5 @@
 const express = require("express");
-const Blog = require("../models/blog");
+const blogController = require("../controllers/blogController");
 
 const router = express.Router();
 
@@ -11,19 +11,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const blog = new Blog(req.body);
-  console.log(req.body);
-
-  blog
-    .save()
-    .then((result) => {
-      res.redirect("/");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+router.post("/", blogController.blog_index);
 
 router.get("/create", (req, res) => {
   res.render("create", { title: "Create" });
